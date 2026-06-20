@@ -22,6 +22,7 @@ const createTableQuery = `
     visitor_id text NOT NULL,
     page_url text NOT NULL,
     ip_address text,
+    email text,
     timestamp timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
   );
 `;
@@ -32,7 +33,7 @@ pool.query(createTableQuery)
 
 // POST endpoint to log page visits
 app.post('/api/track', async (req, res) => {
-  const { visitorId, pageUrl } = req.body;
+  const { visitorId, pageUrl, email } = req.body;
   const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
   if (!visitorId || !pageUrl) {
@@ -40,8 +41,8 @@ app.post('/api/track', async (req, res) => {
   }
 
   try {
-    const insertQuery = `INSERT INTO page_views (visitor_id, page_url, ip_address) VALUES ($1, $2, $3) RETURNING id`;
-    const result = await pool.query(insertQuery, [visitorId, pageUrl, ipAddress]);
+    const insertQuery = `INSERT INTO page_views (visitor_id, page_url, ip_address, email) VALUES ($1, $2, $3, $4) RETURNING id`;
+    const result = await pool.query(insertQuery, [visitorId, pageUrl, ipAddress, email || null]);
     res.json({ success: true, logId: result.rows[0].id });
   } catch (err) {
     console.error('Error logging page view:', err);
@@ -52,7 +53,7 @@ app.post('/api/track', async (req, res) => {
 // GET endpoint to retrieve tracking logs
 app.get('/api/analytics', async (req, res) => {
   try {
-    const query = `SELECT visitor_id, page_url, ip_address, timestamp FROM page_views ORDER BY timestamp DESC`;
+    const query = `SELECT visitor_id, page_url, ip_address, email, timestamp FROM page_views ORDER BY timestamp DESC`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {

@@ -53,6 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
         
         if (response.ok && data.success) {
+          // Log email submission to Supabase tracking database
+          if (typeof window.logEmailToSupabase === 'function') {
+            window.logEmailToSupabase(emailValue).catch(err => {
+              console.warn('Visitor database email log failed:', err);
+            });
+          }
+
           ctaRow.style.display = 'block';
           ctaRow.innerHTML = `<div style="background: rgba(14, 168, 85, 0.15); border: 1px solid rgba(14, 168, 85, 0.3); padding: 1rem 1.5rem; border-radius: var(--radius); color: #4ade80; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 8px; animation: fadeUp 0.5s ease both;">
             <span>✓</span> Demo request sent! We will contact you at ${emailValue} shortly.

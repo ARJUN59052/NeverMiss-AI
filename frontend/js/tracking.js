@@ -44,7 +44,7 @@
   }
 
   // Helper for direct client-side Supabase write (fallback / direct-mode)
-  async function logDirectlyToSupabase() {
+  async function logDirectlyToSupabase(email = null) {
     try {
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const { error } = await supabase
@@ -53,7 +53,8 @@
           {
             visitor_id: visitorId,
             page_url: window.location.href,
-            ip_address: ipAddress
+            ip_address: ipAddress,
+            email: email
           }
         ]);
 
@@ -93,4 +94,34 @@
   } else {
     await logDirectlyToSupabase();
   }
+
+  // 6. Expose global function to log email submissions
+  window.logEmailToSupabase = async function(email) {
+    if (USE_BACKEND) {
+      const targetUrl = BACKEND_HOST ? `${BACKEND_HOST}/api/track` : '/api/track';
+      try {
+        const response = await fetch(targetUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            visitorId: visitorId,
+            pageUrl: window.location.href,
+            email: email
+          })
+        });
+        if (response.ok) {
+          console.log('Email successfully logged via Backend API.');
+        } else {
+          throw new Error(`Backend tracking endpoint returned status ${response.status}.`);
+        }
+      } catch (err) {
+        console.warn('Error logging email to backend, attempting client-side fallback:', err);
+        await logDirectlyToSupabase(email);
+      }
+    } else {
+      await logDirectlyToSupabase(email);
+    }
+  };
 })();
