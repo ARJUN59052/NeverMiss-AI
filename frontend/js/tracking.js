@@ -1,8 +1,12 @@
 (async function() {
   // 1. Configuration
-  // To use your deployed Express backend server, replace this with your Render web service URL (e.g. 'https://nevermiss-backend.onrender.com')
-  // If left empty or undefined, the script will fall back to direct client-side Supabase logging.
-  const BACKEND_URL = ''; 
+  // Set to true to log visits via your backend server (Vercel/Render).
+  // Set to false to write logs directly from client-side script to Supabase.
+  const USE_BACKEND = true; 
+
+  // If you are using an external backend host (like Render), paste its URL here (e.g. 'https://nevermiss-backend.onrender.com').
+  // Leave empty '' to automatically send requests to your current site's domain (perfect for Vercel deployment).
+  const BACKEND_HOST = ''; 
 
   const SUPABASE_URL = 'https://thriovyovxxdcgzvdxem.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_zcV3c7RVe4xyLe3t6q3oCg_wUq_jDS4';
@@ -40,9 +44,10 @@
   }
 
   // 5. Log Page View (Backend vs Direct Supabase fallback)
-  if (BACKEND_URL) {
+  if (USE_BACKEND) {
+    const targetUrl = BACKEND_HOST ? `${BACKEND_HOST}/api/track` : '/api/track';
     try {
-      const response = await fetch(`${BACKEND_URL}/api/track`, {
+      const response = await fetch(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
