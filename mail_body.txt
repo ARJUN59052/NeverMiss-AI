@@ -1,0 +1,9 @@
+Hello,
+
+You have received a new demo request from the NeverMiss landing page!
+
+User's Email: {email}
+Requested on: {date}
+
+Best regards,
+NeverMiss Website Bot
