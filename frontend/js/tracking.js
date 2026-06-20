@@ -43,7 +43,31 @@
     console.warn('Could not capture IP address, continuing with unknown.', e);
   }
 
-  // 5. Log Page View (Backend vs Direct Supabase fallback)
+  // Helper for direct client-side Supabase write (fallback / direct-mode)
+  async function logDirectlyToSupabase() {
+    try {
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { error } = await supabase
+        .from('page_views')
+        .insert([
+          {
+            visitor_id: visitorId,
+            page_url: window.location.href,
+            ip_address: ipAddress
+          }
+        ]);
+
+      if (error) {
+        console.error('Error logging page view to Supabase directly:', error);
+      } else {
+        console.log('Page view successfully logged directly to Supabase client-side.');
+      }
+    } catch (err) {
+      console.error('Failed to log page view via client-side Supabase client:', err);
+    }
+  }
+
+  // 5. Log Page View (Backend with Client-side Fallback)
   if (USE_BACKEND) {
     const targetUrl = BACKEND_HOST ? `${BACKEND_HOST}/api/track` : '/api/track';
     try {
@@ -60,28 +84,13 @@
       if (response.ok) {
         console.log('Page view successfully logged via Backend API.');
       } else {
-        throw new Error('Backend tracking endpoint returned an error.');
+        throw new Error(`Backend tracking endpoint returned status ${response.status}.`);
       }
     } catch (err) {
-      console.error('Error logging page view to backend:', err);
+      console.warn('Error logging page view to backend, attempting client-side fallback:', err);
+      await logDirectlyToSupabase();
     }
   } else {
-    // Fallback: direct client-side Supabase write
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const { error } = await supabase
-      .from('page_views')
-      .insert([
-        {
-          visitor_id: visitorId,
-          page_url: window.location.href,
-          ip_address: ipAddress
-        }
-      ]);
-
-    if (error) {
-      console.error('Error logging page view to Supabase directly:', error);
-    } else {
-      console.log('Page view successfully logged directly to Supabase client-side.');
-    }
+    await logDirectlyToSupabase();
   }
 })();
