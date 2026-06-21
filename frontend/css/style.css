@@ -819,10 +819,11 @@ h1 em {
   box-shadow: var(--shadow-md);
   z-index: 5;
   transition: var(--transition-smooth);
+  transform: translate(-50%, -50%);
 }
 
 .app-node:hover {
-  transform: translateY(-5px) scale(1.1);
+  transform: translate(-50%, -50%) translateY(-5px) scale(1.1);
   border-color: var(--accent);
   box-shadow: 0 10px 25px rgba(0, 82, 255, 0.18);
 }
@@ -834,11 +835,11 @@ h1 em {
 }
 
 /* Position App Nodes — 5-spoke radial layout around centre (200,200) in 400×400 space */
-.node-gcal  { top: 7.75%;  left: 42.75%; }  /* top      (200, 60)  */
-.node-cal   { top: 32%;    left: 76%;    }  /* top-right(333,157)  */
-.node-hub   { top: 71%;    left: 63.25%; }  /* bot-right(282,313)  */
-.node-ghl   { top: 71%;    left: 22.25%; }  /* bot-left (118,313)  */
-.node-slack { top: 32%;    left: 9.5%;   }  /* top-left  (67,157)  */
+.node-gcal  { top: 22.25%; left: 50%; }    /* top      (200, 89)  */
+.node-cal   { top: 41.25%; left: 79.75%; } /* top-right(319,165)  */
+.node-hub   { top: 74.75%; left: 67%; }    /* bot-right(268,299)  */
+.node-ghl   { top: 74.75%; left: 33%; }    /* bot-left (132,299)  */
+.node-slack { top: 41.25%; left: 20.25%; } /* top-left  (81,165)  */
 
 /* ── INTERACTIVE SPEED COMPARISON SLIDER ── */
 .slider-section {
@@ -1003,6 +1004,7 @@ h1 em {
   z-index: 10;
   cursor: ew-resize;
   box-shadow: 0 0 10px rgba(0, 82, 255, 0.4);
+  touch-action: none; /* Prevents mobile scroll gestures from interfering with drag movements */
 }
 
 .slider-handle {
@@ -1024,6 +1026,7 @@ h1 em {
   color: #fff;
   font-size: 1.1rem;
   transition: transform 0.2s ease, background 0.2s ease;
+  touch-action: none; /* Prevents mobile scroll gestures from interfering with drag movements */
 }
 
 .slider-handle:hover {
@@ -2237,6 +2240,26 @@ footer {
   .nav-links {
     display: none;
   }
+  .video-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  .comparison-widget {
+    height: 480px;
+  }
+  .panel-content-fixed {
+    width: 580px;
+    left: 30px;
+    gap: 2rem;
+  }
+  .comparison-left .panel-content-fixed,
+  .comparison-right .panel-content-fixed {
+    left: 30px;
+  }
+  .metric-num {
+    font-size: 3rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2256,24 +2279,64 @@ footer {
   .cta-sub {
     width: 100%;
   }
+  .slider-section,
+  .connector-section,
+  .video-section {
+    padding: 4rem 1rem;
+    width: calc(100% - 1.5rem);
+  }
   .comparison-widget {
-    height: 600px;
+    height: 460px;
   }
   .panel-content-fixed {
     grid-template-columns: 1fr;
-    width: 100%;
-    padding: 1.5rem;
-    left: 0 !important;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    width: 280px;
+    left: 15px !important;
+  }
+  .comparison-left .panel-content-fixed,
+  .comparison-right .panel-content-fixed {
+    left: 15px !important;
+  }
+  .comparison-panel {
+    padding: 2rem 1rem;
+  }
+  .comparison-title {
+    font-size: 1.45rem;
+    margin-bottom: 0.5rem;
+  }
+  .comparison-desc {
+    font-size: 0.88rem;
+  }
+  .comparison-metric {
+    padding: 1rem 0.75rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0.5rem;
+  }
+  .metric-num {
+    font-size: 2.2rem;
+    margin-bottom: 0;
+  }
+  .metric-lbl {
+    font-size: 0.75rem;
   }
   .comparison-right {
-    width: 100% !important;
-    height: 50%;
-    top: auto;
+    width: 50%; /* Removed !important to allow inline JS width updates on drag */
+    height: 100%;
+    top: 0;
     bottom: 0;
-    border-top: 2px solid var(--accent);
+    border-top: none;
   }
   .slider-divider, .slider-handle {
-    display: none; /* Disable interactive slider on tiny mobiles for simple stacks */
+    display: flex !important;
+  }
+  .video-showcase-box {
+    max-width: 100%;
+    margin: 0 auto;
   }
 }
 

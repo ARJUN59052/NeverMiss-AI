@@ -33,19 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         // 1. Send email notification via FormSubmit
-        const emailBody = `New Demo Request — Rapid Voice\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${company || 'N/A'}\nIndustry: ${industry}\nSubmitted: ${new Date().toLocaleString()}`;
-
-        const emailRes = await fetch('https://formsubmit.co/ajax/m19968194@gmail.com', {
+        const emailRes = await fetch('https://formsubmit.co/ajax/5583de775a645c0081ded98851ed668c', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
-            name,
-            email,
-            phone,
-            company: company || 'N/A',
-            industry,
-            _subject: `New Demo Request — ${name} (${industry})`,
-            _message: emailBody
+            'Name': name,
+            'Email': email,
+            'Phone': phone,
+            'Company': company || 'N/A',
+            'Industry': industry,
+            _subject: `⚡ New Demo Lead: ${name} (${industry})`,
+            _template: 'box'
           })
         });
 
@@ -193,8 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDragging) return;
       if (e.touches && e.touches[0]) {
         updateSlider(e.touches[0].clientX);
+        // Explicitly prevent page scrolling/panning during drag
+        if (e.cancelable) e.preventDefault();
       }
-    }, { passive: true });
+    }, { passive: false });
 
     document.addEventListener('touchend', () => {
       isDragging = false;
