@@ -1,7 +1,7 @@
 {
-  "name": "nevermiss-backend",
+  "name": "rapid-voice-backend",
   "version": "1.0.0",
-  "description": "Backend database logging service for NeverMiss",
+  "description": "Backend database logging service for Rapid Voice",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

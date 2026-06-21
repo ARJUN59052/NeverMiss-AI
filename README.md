@@ -1,4 +1,4 @@
-# NeverMiss AI — Landing Page & Visitor Tracking System
+# Rapid Voice — Landing Page & Visitor Tracking System
 
 An elegant, modern landing page with a built-in persistent user-tracking cookie system integrated with Supabase. The project features a structured design separating the frontend and backend, configured to deploy seamlessly together on **Vercel** or independently.
 
@@ -7,8 +7,9 @@ An elegant, modern landing page with a built-in persistent user-tracking cookie 
 ## 📂 Project Structure
 
 ```
-NeverMiss-AI/
+Rapid-Voice/
 ├── frontend/                  # Static Frontend Website
+
 │   ├── js/
 │   │   ├── form_handler.js    # Interactive form submission (FormSubmit.co API)
 │   │   └── tracking.js        # Cookie creation and visit logger handler

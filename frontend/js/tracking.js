@@ -124,4 +124,48 @@
       await logDirectlyToSupabase(email);
     }
   };
+
+  // 7. Expose global function to log full lead form submissions directly to Supabase
+  //
+  // IMPORTANT: Create this table in your Supabase SQL Editor before going live:
+  //
+  //   CREATE TABLE IF NOT EXISTS leads (
+  //     id          BIGSERIAL PRIMARY KEY,
+  //     name        TEXT,
+  //     email       TEXT,
+  //     phone       TEXT,
+  //     company     TEXT,
+  //     industry    TEXT,
+  //     visitor_id  TEXT,
+  //     page_url    TEXT,
+  //     created_at  TIMESTAMPTZ DEFAULT NOW()
+  //   );
+  //
+  //   ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+  //   CREATE POLICY "allow_anon_insert" ON leads FOR INSERT TO anon WITH CHECK (true);
+  //
+  window.logLeadToSupabase = async function({ name, email, phone, company, industry }) {
+    try {
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { error } = await supabase
+        .from('leads')
+        .insert([{
+          name:       name     || null,
+          email:      email    || null,
+          phone:      phone    || null,
+          company:    company  || null,
+          industry:   industry || null,
+          visitor_id: visitorId,
+          page_url:   window.location.href
+        }]);
+
+      if (error) {
+        console.error('Error saving lead to Supabase:', error);
+      } else {
+        console.log('Lead successfully saved to Supabase leads table.');
+      }
+    } catch (err) {
+      console.error('Failed to save lead via Supabase client:', err);
+    }
+  };
 })();

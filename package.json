@@ -1,7 +1,7 @@
 {
-  "name": "nevermiss-vercel-deployment",
+  "name": "rapid-voice-vercel-deployment",
   "version": "1.0.0",
-  "description": "Root configuration to deploy NeverMiss frontend and backend serverless on Vercel",
+  "description": "Root configuration to deploy Rapid Voice frontend and backend serverless on Vercel",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",

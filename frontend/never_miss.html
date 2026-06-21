@@ -1,1026 +1,704 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeverMiss — AI Phone Agents for Local Businesses</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --ink: #0f0f0f;
-  --ink-muted: #6b6b6b;
-  --ink-faint: #aaaaaa;
-  --page: #f9f8f5;
-  --surface: #f0efe9;
-  --border: #e3e1d9;
-  --accent: #0ea855;
-  --accent-dark: #088a43;
-  --accent-light: #e6f9ee;
-  --gold: #c9920a;
-  --gold-light: #fef9ec;
-  --danger: #d63031;
-  --radius: 10px;
-  --radius-lg: 18px;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--page);
-  color: var(--ink);
-  font-size: 17px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── NAV ── */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: rgba(249,248,245,0.88);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 66px;
-}
-
-.nav-logo {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.logo-wave {
-  position: absolute;
-  inset: 0;
-  background: conic-gradient(from 180deg, #0ea855 0%, #065f30 40%, #0ea855 100%);
-  opacity: 0.25;
-  animation: logoSpin 5s linear infinite;
-}
-
-@keyframes logoSpin { to { transform: rotate(360deg); } }
-
-.logo-mark svg { position: relative; z-index: 1; }
-
-.logo-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  line-height: 1;
-}
-
-.logo-text .miss { color: var(--accent); }
-
-.logo-sub {
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-top: 2px;
-  display: block;
-}
-
-.nav-links { display: flex; gap: 2rem; list-style: none; }
-.nav-links a { font-size: 0.9rem; color: var(--ink-muted); text-decoration: none; font-weight: 600; transition: color 0.2s; }
-.nav-links a:hover { color: var(--ink); }
-
-.nav-cta {
-  background: var(--accent) !important;
-  color: #fff !important;
-  padding: 0.58rem 1.35rem;
-  border-radius: var(--radius);
-  font-size: 0.88rem !important;
-  font-weight: 700 !important;
-  transition: background 0.2s, transform 0.1s !important;
-}
-.nav-cta:hover { background: var(--accent-dark) !important; transform: translateY(-1px); }
-
-/* ── HERO ── */
-.hero-wrap {
-  position: relative;
-  overflow: hidden;
-  background: #080e0a;
-}
-
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(14,168,85,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14,168,85,0.07) 1px, transparent 1px);
-  background-size: 52px 52px;
-  animation: gridMove 18s linear infinite;
-}
-
-@keyframes gridMove {
-  0% { background-position: 0 0; }
-  100% { background-position: 52px 52px; }
-}
-
-.hero-radial {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.hero-radial-1 {
-  width: 800px; height: 800px;
-  background: radial-gradient(circle, rgba(14,168,85,0.16) 0%, transparent 65%);
-  top: -300px; left: -200px;
-}
-
-.hero-radial-2 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(14,168,85,0.09) 0%, transparent 65%);
-  bottom: -150px; right: 50px;
-}
-
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: #0ea855;
-  opacity: 0;
-  animation: rise var(--d,7s) ease-in infinite var(--dl,0s);
-}
-
-@keyframes rise {
-  0% { opacity: 0; transform: translateY(0) scale(.4); }
-  25% { opacity: .55; }
-  75% { opacity: .25; }
-  100% { opacity: 0; transform: translateY(-130px) scale(1); }
-}
-
-.hero {
-  position: relative;
-  z-index: 2;
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 7rem 2.5rem 6rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-.hero-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(14,168,85,0.1);
-  border: 1px solid rgba(14,168,85,0.22);
-  color: #4ade80;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.42rem 1rem;
-  border-radius: 100px;
-  margin-bottom: 1.5rem;
-}
-
-.hero-pill-dot {
-  width: 6px; height: 6px;
-  background: #4ade80;
-  border-radius: 50%;
-  animation: blink 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,.6); }
-  50% { opacity: .6; box-shadow: 0 0 0 5px rgba(74,222,128,0); }
-}
-
-h1 {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: clamp(2.9rem, 5.5vw, 4.4rem);
-  line-height: 1.0;
-  letter-spacing: -0.02em;
-  color: #fff;
-  margin-bottom: 1.5rem;
-}
-
-h1 em {
-  font-style: italic;
-  color: #4ade80;
-  display: inline-block;
-}
-
-.hero-sub {
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.52);
-  line-height: 1.8;
-  margin-bottom: 2.25rem;
-  max-width: 450px;
-  font-weight: 400;
-}
-
-.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
-
-.btn-green {
-  background: var(--accent);
-  color: #fff;
-  padding: 0.95rem 2.25rem;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: background .2s, transform .15s, box-shadow .2s;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-}
-.btn-green:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,168,85,.35); }
-
-.btn-outline {
-  color: rgba(255,255,255,.65);
-  padding: 0.9rem 1.75rem;
-  border-radius: var(--radius);
-  font-size: .95rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,.14);
-  transition: all .2s;
-}
-.btn-outline:hover { color: #fff; border-color: rgba(255,255,255,.28); background: rgba(255,255,255,.05); }
-
-/* phone */
-.hero-visual { display: flex; justify-content: center; align-items: center; }
-
-.phone-frame {
-  width: 268px;
-  background: #111;
-  border-radius: 38px;
-  padding: 14px;
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 48px 120px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.04) inset;
-}
-
-.phone-notch {
-  width: 90px; height: 22px;
-  background: #111;
-  border-radius: 0 0 14px 14px;
-  margin: 0 auto 10px;
-}
-
-.phone-screen {
-  background: #0c0c0c;
-  border-radius: 24px;
-  overflow: hidden;
-  min-height: 432px;
-  display: flex;
-  flex-direction: column;
-}
-
-.phone-bar {
-  background: #0c0c0c;
-  padding: 10px 14px 6px;
-  font-size: 10px;
-  color: #444;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-}
-
-.call-screen {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.25rem 1rem .5rem;
-  gap: .75rem;
-}
-
-.caller-orb {
-  width: 68px; height: 68px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: #fff;
-  position: relative;
-  letter-spacing: -0.04em;
-}
-
-.caller-orb::before, .caller-orb::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  border: 1.5px solid rgba(14,168,85,.35);
-  animation: ripple 2.5s ease-out infinite;
-}
-.caller-orb::before { width: 94px; height: 94px; animation-delay: 0s; }
-.caller-orb::after  { width: 118px; height: 118px; animation-delay: .65s; }
-
-@keyframes ripple {
-  0%   { opacity: .9; transform: scale(.85); }
-  100% { opacity: 0;  transform: scale(1.25); }
-}
-
-.caller-name { color: #fff; font-size: .85rem; font-weight: 700; text-align: center; }
-.caller-live { font-size: .68rem; color: #4ade80; font-weight: 600; letter-spacing: .06em; }
-
-.bubbles { width: 100%; display: flex; flex-direction: column; gap: 7px; margin-top: .4rem; }
-
-.bub {
-  padding: 8px 12px;
-  border-radius: 14px;
-  font-size: .7rem;
-  line-height: 1.45;
-  max-width: 88%;
-  animation: fadeUp .5s ease both;
-}
-.bub-ai   { background: #1e1e1e; color: #ccc; align-self: flex-start; border-bottom-left-radius: 4px; }
-.bub-user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
-.bub:nth-child(1){animation-delay:.4s} .bub:nth-child(2){animation-delay:1.1s}
-.bub:nth-child(3){animation-delay:1.8s} .bub:nth-child(4){animation-delay:2.5s}
-
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-
-.phone-acts { display: flex; justify-content: center; gap: 1.25rem; padding: .75rem 0 1rem; }
-.phone-btn  { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; }
-.pb-end  { background: #dc2626; }
-.pb-mute { background: #222; }
-.pb-spk  { background: #222; }
-
-/* ── STATS ── */
-.stats-bar { background: var(--ink); padding: 1.75rem 2.5rem; }
-.stats-inner {
-  max-width: 1160px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; text-align: center;
-}
-.stat-n {
-  font-family: 'Fraunces', serif;
-  font-size: 2.4rem; font-weight: 700; color: var(--accent);
-  display: block; line-height: 1; margin-bottom: .3rem; letter-spacing: -.02em;
-}
-.stat-l { font-size: .77rem; color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .07em; font-weight: 600; }
-
-/* ── SHARED ── */
-section { max-width: 1160px; margin: 0 auto; padding: 5.5rem 2.5rem; }
-
-.eyebrow {
-  font-size: .72rem; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: .75rem;
-}
-
-h2 {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: clamp(2.1rem, 3.8vw, 3.1rem);
-  line-height: 1.08;
-  letter-spacing: -.02em;
-  color: var(--ink);
-  margin-bottom: 1rem;
-}
-h2 em { font-style: italic; color: var(--accent); }
-
-.intro { font-size: 1.05rem; color: var(--ink-muted); max-width: 520px; margin-bottom: 3rem; line-height: 1.75; }
-
-.divider { max-width: 1160px; margin: 0 auto; padding: 0 2.5rem; border-bottom: 1px solid var(--border); }
-
-/* ── PROBLEM ── */
-.prob-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1.5px; background: var(--border);
-  border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
-}
-.prob-card { background: var(--page); padding: 2.25rem 1.75rem; transition: background .2s; }
-.prob-card:hover { background: #fff; }
-.prob-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
-.prob-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .6rem; }
-.prob-card p  { font-size: .9rem; color: var(--ink-muted); line-height: 1.7; }
-.prob-loss    { font-weight: 700; color: var(--danger); font-size: .875rem; margin-top: .875rem; }
-
-/* ── HOW IT WORKS ── */
-.steps-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-.steps-list { display: flex; flex-direction: column; }
-
-.step {
-  display: grid; grid-template-columns: 44px 1fr; gap: 1.25rem;
-  padding: 1.75rem 0; border-bottom: 1px solid var(--border);
-}
-.step:last-child { border-bottom: none; }
-
-.step-n {
-  width: 36px; height: 36px;
-  background: var(--ink); color: #fff; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: .82rem; flex-shrink: 0; margin-top: 2px;
-}
-.step-t { font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem; }
-.step-d { font-size: .9rem; color: var(--ink-muted); line-height: 1.7; }
-
-.sum-card {
-  background: var(--ink); border-radius: var(--radius-lg);
-  padding: 1.5rem; border: 1px solid #1f1f1f; position: sticky; top: 86px;
-}
-.sum-head {
-  font-size: .63rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
-  color: rgba(255,255,255,.25); margin-bottom: 1rem;
-  display: flex; align-items: center; gap: .5rem;
-}
-.sum-head::after { content: ''; flex: 1; height: 1px; background: #222; }
-.sum-row { display: flex; align-items: flex-start; gap: .75rem; padding: .875rem 0; border-bottom: 1px solid #1e1e1e; }
-.sum-row:last-child { border-bottom: none; }
-.sum-time { font-size: .66rem; color: rgba(255,255,255,.22); min-width: 42px; margin-top: 2px; font-weight: 600; }
-.sum-msg  { color: rgba(255,255,255,.62); line-height: 1.5; font-size: .83rem; }
-.stag { display: inline-block; padding: 2px 9px; border-radius: 100px; font-size: .68rem; font-weight: 700; margin-top: 5px; }
-.t-book { background: rgba(14,168,85,.15); color: #4ade80; }
-.t-lead { background: rgba(201,146,10,.15); color: #fbbf24; }
-.t-xfer { background: rgba(214,48,49,.15); color: #f87171; }
-
-/* ── NICHES ── */
-.niches { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; }
-.niche {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 1.5rem 1rem; text-align: center; cursor: default;
-  transition: border-color .2s, transform .2s, background .2s;
-}
-.niche:hover { border-color: var(--accent); transform: translateY(-3px); background: #fff; }
-.niche-i { font-size: 1.9rem; display: block; margin-bottom: .75rem; }
-.niche-n { font-size: .82rem; font-weight: 700; color: var(--ink); }
-
-/* ── PRICING ── */
-.price-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1.5px; background: var(--border);
-  border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
-}
-.price-card { background: var(--page); padding: 2.25rem 2rem; display: flex; flex-direction: column; }
-.price-card.feat { background: var(--ink); }
-
-.price-tier { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 1.5rem; }
-.price-card.feat .price-tier { color: rgba(255,255,255,.35); }
-
-.price-setup { font-size: .88rem; color: var(--ink-muted); font-weight: 600; margin-bottom: .2rem; }
-.price-card.feat .price-setup { color: rgba(255,255,255,.35); }
-
-.price-mo { display: flex; align-items: baseline; gap: 4px; margin-bottom: .75rem; }
-.price-amt {
-  font-family: 'Fraunces', serif;
-  font-size: 3rem; font-weight: 700; letter-spacing: -.03em; color: var(--ink);
-}
-.price-card.feat .price-amt { color: #fff; }
-.price-per { font-size: .9rem; color: var(--ink-muted); font-weight: 600; }
-.price-card.feat .price-per { color: rgba(255,255,255,.35); }
-
-.price-desc { font-size: .875rem; color: var(--ink-muted); margin-bottom: 1.75rem; line-height: 1.65; }
-.price-card.feat .price-desc { color: rgba(255,255,255,.45); }
-
-.price-feats { list-style: none; display: flex; flex-direction: column; gap: .9rem; flex: 1; }
-.price-feats li { font-size: .9rem; color: var(--ink-muted); display: flex; align-items: flex-start; gap: .6rem; line-height: 1.5; }
-.price-card.feat .price-feats li { color: rgba(255,255,255,.62); }
-.price-feats li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
-.price-card.feat .price-feats li::before { color: #4ade80; }
-
-.price-btn {
-  display: block; text-align: center; margin-top: 2.25rem; padding: .875rem;
-  border-radius: var(--radius); font-size: .95rem; font-weight: 700;
-  text-decoration: none; border: 1.5px solid var(--border); color: var(--ink);
-  transition: background .2s, border-color .2s, transform .1s;
-}
-.price-btn:hover { background: var(--surface); border-color: var(--ink-muted); transform: translateY(-1px); }
-.price-card.feat .price-btn { background: var(--accent); border-color: var(--accent); color: #fff; }
-.price-card.feat .price-btn:hover { background: var(--accent-dark); }
-
-.price-badge {
-  display: inline-block; background: var(--accent); color: #fff;
-  font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 100px; margin-bottom: 1rem;
-}
-
-/* ── TESTIMONIALS ── */
-.testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
-.testi-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 1.75rem; transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column;
-}
-.testi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.07); }
-
-.stars { color: var(--gold); font-size: .95rem; margin-bottom: 1rem; letter-spacing: 2px; }
-.testi-q { font-size: .95rem; color: var(--ink); line-height: 1.72; margin-bottom: 1.25rem; font-style: italic; flex: 1; }
-.testi-author { display: flex; align-items: center; gap: .75rem; margin-top: auto; }
-.testi-av {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--accent-light); color: var(--accent-dark);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: .78rem; flex-shrink: 0;
-}
-.testi-name { font-size: .9rem; font-weight: 700; color: var(--ink); }
-.testi-biz  { font-size: .775rem; color: var(--ink-muted); }
-
-/* ── PROCESS ── */
-.proc-row {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  position: relative; padding-top: 1rem;
-}
-.proc-row::before {
-  content: ''; position: absolute;
-  top: 38px; left: calc(12.5% + 24px); right: calc(12.5% + 24px);
-  height: 1px; background: var(--border);
-}
-.proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1rem; }
-.proc-dot {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: var(--surface); border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; margin-bottom: 1.1rem; position: relative; z-index: 1;
-  transition: border-color .2s, background .2s;
-}
-.proc-step:hover .proc-dot { border-color: var(--accent); background: var(--accent-light); }
-.proc-wk { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
-.proc-t  { font-size: .9rem; font-weight: 700; color: var(--ink); margin-bottom: .4rem; }
-.proc-d  { font-size: .8rem; color: var(--ink-muted); line-height: 1.65; }
-
-/* ── FAQ ── */
-.faq-list {
-  display: flex; flex-direction: column;
-  border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
-}
-.faq-item { border-bottom: 1px solid var(--border); background: var(--page); }
-.faq-item:last-child { border-bottom: none; }
-.faq-q {
-  width: 100%; background: none; border: none;
-  padding: 1.375rem 1.75rem; text-align: left;
-  font-size: 1rem; font-weight: 700; color: var(--ink);
-  cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-  font-family: 'Plus Jakarta Sans', sans-serif; transition: background .15s;
-}
-.faq-q:hover { background: var(--surface); }
-.faq-tog {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--surface); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; flex-shrink: 0; transition: transform .25s, background .2s;
-  color: var(--ink-muted); line-height: 1; font-weight: 400;
-}
-.faq-item.open .faq-tog { transform: rotate(45deg); background: var(--ink); border-color: var(--ink); color: #fff; }
-.faq-a {
-  display: none; padding: 1.25rem 1.75rem;
-  font-size: .95rem; color: var(--ink-muted); line-height: 1.8;
-  border-top: 1px solid var(--border);
-}
-.faq-item.open .faq-a { display: block; }
-
-/* ── CTA ── */
-.cta-wrap {
-  position: relative; overflow: hidden;
-  background: #080e0a; padding: 6.5rem 2.5rem; text-align: center;
-}
-.cta-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(14,168,85,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14,168,85,.05) 1px, transparent 1px);
-  background-size: 52px 52px;
-}
-.cta-glow {
-  position: absolute; width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(14,168,85,.14) 0%, transparent 70%);
-  top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
-}
-.cta-body { position: relative; z-index: 2; max-width: 580px; margin: 0 auto; }
-.cta-wrap h2 { color: #fff; margin-bottom: 1rem; }
-.cta-wrap h2 em { color: #4ade80; }
-.cta-wrap p { color: rgba(255,255,255,.48); margin-bottom: 2rem; font-size: 1.05rem; }
-.cta-row { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
-.cta-in {
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--radius); padding: .9rem 1.375rem; color: #fff;
-  font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; width: 300px;
-  outline: none; transition: border-color .2s; font-weight: 500;
-}
-.cta-in::placeholder { color: rgba(255,255,255,.28); }
-.cta-in:focus { border-color: rgba(14,168,85,.5); }
-.cta-sub {
-  background: var(--accent); color: #fff; border: none;
-  padding: .9rem 2rem; border-radius: var(--radius); font-size: 1rem; font-weight: 700;
-  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: background .2s, transform .15s;
-}
-.cta-sub:hover { background: var(--accent-dark); transform: translateY(-1px); }
-.cta-note { font-size: .78rem; color: rgba(255,255,255,.25); margin-top: 1rem; }
-
-/* ── FOOTER ── */
-footer { background: #050c07; border-top: 1px solid #0f1a10; padding: 2.5rem; }
-.foot-inner {
-  max-width: 1160px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
-}
-.foot-logo { text-decoration: none; display: flex; align-items: center; gap: 10px; }
-.foot-lm {
-  width: 30px; height: 30px; border-radius: 8px; background: var(--accent);
-  display: flex; align-items: center; justify-content: center;
-}
-.foot-wm { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: rgba(255,255,255,.75); }
-.foot-wm span { color: var(--accent); }
-.foot-links { display: flex; gap: 1.75rem; list-style: none; }
-.foot-links a { font-size: .82rem; color: rgba(255,255,255,.28); text-decoration: none; font-weight: 600; transition: color .2s; }
-.foot-links a:hover { color: rgba(255,255,255,.65); }
-.foot-copy { font-size: .775rem; color: rgba(255,255,255,.18); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4.5rem 1.75rem; }
-  .hero-visual { display: none; }
-  .stats-inner { grid-template-columns: repeat(2,1fr); }
-  .prob-grid { grid-template-columns: 1fr; }
-  .steps-wrap { grid-template-columns: 1fr; }
-  .niches { grid-template-columns: repeat(3,1fr); }
-  .price-grid { grid-template-columns: 1fr; background: var(--page); }
-  .price-card { border: 1px solid var(--border); border-radius: var(--radius-lg); }
-  .testi-grid { grid-template-columns: 1fr; }
-  .proc-row { grid-template-columns: repeat(2,1fr); gap: 2rem; }
-  .proc-row::before { display: none; }
-  nav { padding: 0 1.75rem; }
-  .nav-links { display: none; }
-}
-@media (max-width: 560px) {
-  .niches { grid-template-columns: repeat(2,1fr); }
-  .proc-row { grid-template-columns: 1fr; }
-  .cta-in { width: 100%; }
-  .cta-row { flex-direction: column; align-items: center; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapid Voice — AI Phone Agents for Local Businesses</title>
+  <meta name="description" content="Rapid Voice gives your business an AI phone agent that answers calls, books appointments, and captures leads 24/7. Every call becomes an opportunity.">
+  
+  <!-- Preconnect and Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  
+  <!-- Redesigned style framework -->
+  <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">
-    <div class="logo-mark">
-      <div class="logo-wave"></div>
-      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="position:relative;z-index:1">
-        <path d="M10 2.5C10 2.5 4.5 5.5 4.5 10.5C4.5 15 10 17.5 10 17.5C10 17.5 15.5 15 15.5 10.5C15.5 5.5 10 2.5 10 2.5Z" fill="#4ade80"/>
-        <circle cx="10" cy="10.5" r="2.5" fill="#080e0a"/>
+  <!-- TOP PROMO TICKER (Wispr Flow style) -->
+  <div class="top-banner">
+    <span class="top-banner-badge">NEW</span>
+    <span>Rapid Voice v2.0 is live! Integrate directly with HubSpot &amp; GoHighLevel.</span>
+    <a href="#pricing">See plans &rarr;</a>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <nav>
+    <a class="nav-brand-container" href="#">
+      <!-- Link the actual logo image -->
+      <img src="logo.png" alt="Rapid Voice Logo" class="nav-logo-img">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="#who-it-helps">Who it helps</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a class="nav-cta" href="#contact">Get started</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <div class="hero-wrap">
+    <div class="hero-grid"></div>
+    <div class="hero-radial hero-radial-1"></div>
+    <div class="hero-radial hero-radial-2"></div>
+    
+    <!-- Floating particles background -->
+    <div class="particle" style="width:4px; height:4px; left:10%; bottom:18%; --d:7s; --dl:0s"></div>
+    <div class="particle" style="width:3px; height:3px; left:25%; bottom:14%; --d:9s; --dl:1.5s"></div>
+    <div class="particle" style="width:5px; height:5px; left:55%; bottom:22%; --d:8s; --dl:.8s"></div>
+    <div class="particle" style="width:3px; height:3px; left:72%; bottom:17%; --d:6.5s; --dl:2s"></div>
+    <div class="particle" style="width:4px; height:4px; left:88%; bottom:28%; --d:10s; --dl:.3s"></div>
+
+    <!-- Floating SVG voice-to-text path animations (Wispr Flow style) -->
+    <div class="hero-wave-animation-wrapper">
+      <svg class="hero-wave-animation" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="hero-curve-1" d="M -50,150 C 300,50 450,450 800,300 C 1150,150 1200,550 1500,450" />
+        <path id="hero-curve-2" d="M -100,450 C 250,550 500,150 900,250 C 1200,350 1250,50 1550,120" />
+        
+        <text>
+          <textPath href="#hero-curve-1" startOffset="0%">
+            <animate attributeName="startOffset" from="0%" to="100%" dur="40s" repeatCount="indefinite" />
+            "Hey, thanks for calling... I'd like to book a dental checkup for tomorrow morning... Sure, we have 9:00 AM open..."
+          </textPath>
+        </text>
+        <text class="bold-path">
+          <textPath href="#hero-curve-2" startOffset="50%">
+            <animate attributeName="startOffset" from="50%" to="-50%" dur="35s" repeatCount="indefinite" />
+            "Rapid Voice AI scheduled a new appointment details sent to your calendar inbox... Every call becomes an opportunity..."
+          </textPath>
+        </text>
       </svg>
     </div>
-    <div>
-      <div class="logo-text">Never<span class="miss">Miss</span></div>
-      <span class="logo-sub">AI Phone Agents</span>
-    </div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#how-it-works">How it works</a></li>
-    <li><a href="#who-it-helps">Who it helps</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#contact" class="nav-cta">Get started</a></li>
-  </ul>
-</nav>
 
-<!-- HERO -->
-<div class="hero-wrap">
-  <div class="hero-grid"></div>
-  <div class="hero-radial hero-radial-1"></div>
-  <div class="hero-radial hero-radial-2"></div>
-  <div class="particle" style="width:4px;height:4px;left:10%;bottom:18%;--d:7s;--dl:0s"></div>
-  <div class="particle" style="width:3px;height:3px;left:25%;bottom:14%;--d:9s;--dl:1.5s"></div>
-  <div class="particle" style="width:5px;height:5px;left:55%;bottom:22%;--d:8s;--dl:.8s"></div>
-  <div class="particle" style="width:3px;height:3px;left:72%;bottom:17%;--d:6.5s;--dl:2s"></div>
-  <div class="particle" style="width:4px;height:4px;left:88%;bottom:28%;--d:10s;--dl:.3s"></div>
-  <div class="hero">
-    <div>
-      <div class="hero-pill"><div class="hero-pill-dot"></div>Live 24/7 — No hold music. No voicemail.</div>
-      <h1>Your business,<br><em>always answering.</em></h1>
-      <p class="hero-sub">NeverMiss gives your business an AI phone agent that picks up every call, books appointments, captures leads, and sends you a summary — even at 2 AM.</p>
-      <div class="hero-btns">
-        <a href="#contact" class="btn-green">Hear a live demo &rarr;</a>
-        <a href="#pricing" class="btn-outline">See pricing</a>
+    <!-- HERO CONTENT CONTAINER -->
+    <div class="hero">
+      <div>
+        <div class="hero-pill"><div class="hero-pill-dot"></div>Live 24/7 — No hold music. No voicemail.</div>
+        <h1>Your business,<br><em>always answering.</em></h1>
+        <p class="hero-sub">Rapid Voice gives your business an AI phone agent that picks up every call, books appointments, captures leads, and sends you a summary — even at 2 AM.</p>
+        <div class="hero-btns">
+          <a class="btn-green" href="#contact">Hear a live demo &rarr;</a>
+          <a class="btn-outline" href="#pricing">See pricing</a>
+        </div>
       </div>
-    </div>
-    <div class="hero-visual">
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="phone-bar"><span>9:41 AM</span><span>●●● 5G</span></div>
-          <div class="call-screen">
-            <div class="caller-orb">NM</div>
-            <div class="caller-name">NeverMiss Agent</div>
-            <div class="caller-live">● Connected</div>
-            <div class="bubbles">
-              <div class="bub bub-ai">Thanks for calling! How can I help you today?</div>
-              <div class="bub bub-user">I need to book a tune-up for tomorrow.</div>
-              <div class="bub bub-ai">I've got 10 AM or 2 PM open. Which works?</div>
-              <div class="bub bub-user">10 AM works great.</div>
+      
+      <!-- PHONE MOCKUP (VOICE CALL UI) -->
+      <div class="hero-visual">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-bar"><span>9:41 AM</span><span>●●● 5G</span></div>
+            <div class="call-screen">
+              <div class="caller-orb">RV</div>
+              <div class="caller-name">Rapid Voice Agent</div>
+              <div class="caller-live">● Connected</div>
+
+              <!-- Animated call duration timer -->
+              <div class="call-timer" id="call-timer">00:42</div>
+
+              <!-- Audio visualizer waves -->
+              <div class="voice-wave-container">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+              </div>
+
+              <!-- Live transcript line -->
+              <div class="call-transcript">
+                <div class="transcript-line" id="transcript-text">Booking your appointment for Thursday at 10 AM...</div>
+              </div>
             </div>
-          </div>
-          <div class="phone-acts">
-            <div class="phone-btn pb-mute">🔇</div>
-            <div class="phone-btn pb-end">📵</div>
-            <div class="phone-btn pb-spk">🔊</div>
+            <div class="phone-acts">
+              <div class="phone-btn pb-mute">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23M12 19v4m-4 0h8"/></svg>
+              </div>
+              <div class="phone-btn pb-end">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1"><path d="M23.71 16.67C20.66 13.78 16.54 12 12 12 7.46 12 3.34 13.78.29 16.67c-.18.18-.29.43-.29.68 0 .28.11.52.29.71l2.48 2.48c.18.18.43.29.71.29.27 0 .52-.11.7-.28.79-.74 1.69-1.36 2.66-1.85.33-.16.56-.5.56-.9v-3.1c1.45-.45 2.98-.7 4.6-.7 1.62 0 3.15.25 4.6.7v3.1c0 .4.23.74.56.9.98.49 1.87 1.12 2.66 1.85.18.18.43.28.7.28.28 0 .53-.11.71-.29l2.48-2.48c.18-.19.29-.43.29-.71 0-.25-.11-.5-.29-.68z"/></svg>
+              </div>
+              <div class="phone-btn pb-spk">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div><span class="stat-n">62%</span><span class="stat-l">of callers won't leave voicemail</span></div>
-    <div><span class="stat-n">24/7</span><span class="stat-l">Coverage, weekends included</span></div>
-    <div><span class="stat-n">&lt;2s</span><span class="stat-l">Average answer time</span></div>
-    <div><span class="stat-n">3×</span><span class="stat-l">More bookings vs voicemail</span></div>
-  </div>
-</div>
-
-<!-- PROBLEM -->
-<section>
-  <p class="eyebrow">The problem</p>
-  <h2>Every missed call is a<br><em>missed customer.</em></h2>
-  <p class="intro">Small businesses lose revenue daily not because of bad service — but because no one picked up the phone.</p>
-  <div class="prob-grid">
-    <div class="prob-card">
-      <span class="prob-icon">📵</span>
-      <h3>Calls during busy hours</h3>
-      <p>You're with a customer, under a car, or finishing a job. Your phone rings — and rings. Nobody answers.</p>
-      <p class="prob-loss">↑ That caller booked your competitor.</p>
-    </div>
-    <div class="prob-card">
-      <span class="prob-icon">🌙</span>
-      <h3>After-hours inquiries</h3>
-      <p>45% of service calls happen outside 9–5. Without 24/7 coverage, you wake up to voicemails you can't act on fast enough.</p>
-      <p class="prob-loss">↑ They moved on overnight.</p>
-    </div>
-    <div class="prob-card">
-      <span class="prob-icon">🔁</span>
-      <h3>Repetitive questions</h3>
-      <p>Hours per week spent answering the same questions — "What are your hours?", "Do you take insurance?", "How much is a haircut?"</p>
-      <p class="prob-loss">↑ That's billable time lost to the phone.</p>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- HOW IT WORKS -->
-<section id="how-it-works">
-  <p class="eyebrow">How it works</p>
-  <h2>Set up once.<br><em>Always on.</em></h2>
-  <div class="steps-wrap">
-    <div class="steps-list">
-      <div class="step"><div class="step-n">1</div><div><div class="step-t">We learn your business</div><p class="step-d">30 minutes learning your services, hours, FAQs, and booking flow. No technical knowledge needed on your end.</p></div></div>
-      <div class="step"><div class="step-n">2</div><div><div class="step-t">Your agent goes live</div><p class="step-d">We forward your number or assign a new one. Your AI agent answers in your business's voice — human-sounding, never robotic.</p></div></div>
-      <div class="step"><div class="step-n">3</div><div><div class="step-t">Calls are handled automatically</div><p class="step-d">Your agent books appointments, answers questions, captures leads, and routes urgent calls directly to you via transfer.</p></div></div>
-      <div class="step"><div class="step-n">4</div><div><div class="step-t">You get a daily summary</div><p class="step-d">Every morning, a clean summary — who called, what they needed, what was booked, and what needs your attention.</p></div></div>
-    </div>
-    <div class="sum-card">
-      <div class="sum-head">Today's call summary</div>
-      <div class="sum-row"><div class="sum-time">8:14 AM</div><div><div class="sum-msg">Marco R. — AC tune-up, booked for Thursday 10 AM</div><span class="stag t-book">Booked</span></div></div>
-      <div class="sum-row"><div class="sum-time">9:02 AM</div><div><div class="sum-msg">Unknown — asked about pricing, left contact number</div><span class="stag t-lead">Lead captured</span></div></div>
-      <div class="sum-row"><div class="sum-time">11:47 AM</div><div><div class="sum-msg">Sandra K. — emergency furnace issue, transferred to you</div><span class="stag t-xfer">Transferred</span></div></div>
-      <div class="sum-row"><div class="sum-time">2:31 PM</div><div><div class="sum-msg">Chris T. — HVAC inspection, booked for Friday 3 PM</div><span class="stag t-book">Booked</span></div></div>
-      <div class="sum-row"><div class="sum-time">6:18 PM</div><div><div class="sum-msg">First-time caller — asked about payment plans, left email</div><span class="stag t-lead">Lead captured</span></div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- WHO IT HELPS -->
-<section id="who-it-helps">
-  <p class="eyebrow">Who it helps</p>
-  <h2>Built for <em>local service businesses.</em></h2>
-  <p class="intro">Any business where a missed call = a missed customer. If your phone matters, your phone agent matters.</p>
-  <div class="niches">
-    <div class="niche"><span class="niche-i">🔧</span><div class="niche-n">HVAC & Plumbing</div></div>
-    <div class="niche"><span class="niche-i">🦷</span><div class="niche-n">Dental Clinics</div></div>
-    <div class="niche"><span class="niche-i">✂️</span><div class="niche-n">Salons & Spas</div></div>
-    <div class="niche"><span class="niche-i">🍕</span><div class="niche-n">Restaurants</div></div>
-    <div class="niche"><span class="niche-i">🚗</span><div class="niche-n">Auto Repair</div></div>
-    <div class="niche"><span class="niche-i">🏠</span><div class="niche-n">Property Managers</div></div>
-    <div class="niche"><span class="niche-i">🏋️</span><div class="niche-n">Gyms & Studios</div></div>
-    <div class="niche"><span class="niche-i">🧹</span><div class="niche-n">Cleaning Services</div></div>
-    <div class="niche"><span class="niche-i">🏥</span><div class="niche-n">Clinics & Med Spas</div></div>
-    <div class="niche"><span class="niche-i">⚡</span><div class="niche-n">Electricians</div></div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- PRICING -->
-<section id="pricing">
-  <p class="eyebrow">Pricing</p>
-  <h2>Simple pricing.<br><em>No surprises.</em></h2>
-  <p class="intro">One-time setup fee. Monthly subscription. Cancel anytime. Most clients recoup the cost from their first week of saved calls.</p>
-  <div class="price-grid">
-    <div class="price-card">
-      <div class="price-tier">Starter</div>
-      <div class="price-setup">+ $299 setup</div>
-      <div class="price-mo"><span class="price-amt">$149</span><span class="price-per">/mo</span></div>
-      <p class="price-desc">For solo operators and small shops who need to stop missing calls.</p>
-      <ul class="price-feats">
-        <li>24/7 call answering</li>
-        <li>FAQ handling (hours, services, pricing)</li>
-        <li>Missed call handling</li>
-        <li>Daily text + email call summary</li>
-        <li>Up to 200 calls/month</li>
-        <li>Setup in 3–5 days</li>
-      </ul>
-      <a href="#contact" class="price-btn">Get started</a>
-    </div>
-    <div class="price-card feat">
-      <div class="price-badge">Most popular</div>
-      <div class="price-tier">Growth</div>
-      <div class="price-setup">+ $499 setup</div>
-      <div class="price-mo"><span class="price-amt">$299</span><span class="price-per">/mo</span></div>
-      <p class="price-desc">For businesses ready to automate bookings and grow their pipeline.</p>
-      <ul class="price-feats">
-        <li>Everything in Starter</li>
-        <li>Appointment booking (Google Cal, Calendly)</li>
-        <li>Lead capture with follow-up</li>
-        <li>Live call transfer to you</li>
-        <li>Up to 500 calls/month</li>
-        <li>Monthly performance report</li>
-      </ul>
-      <a href="#contact" class="price-btn">Get started</a>
-    </div>
-    <div class="price-card">
-      <div class="price-tier">Pro</div>
-      <div class="price-setup">+ $999 setup</div>
-      <div class="price-mo"><span class="price-amt">$499</span><span class="price-per">/mo</span></div>
-      <p class="price-desc">For multi-location or high-volume businesses needing full integration.</p>
-      <ul class="price-feats">
-        <li>Everything in Growth</li>
-        <li>CRM integration (HubSpot, GoHighLevel)</li>
-        <li>Multi-location routing</li>
-        <li>Custom analytics dashboard</li>
-        <li>Unlimited calls</li>
-        <li>Priority support</li>
-      </ul>
-      <a href="#contact" class="price-btn">Get started</a>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- TESTIMONIALS — 6 customers -->
-<section>
-  <p class="eyebrow">From the field</p>
-  <h2>What business owners are <em>saying.</em></h2>
-  <div class="testi-grid">
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"We were losing 8–10 calls a day while technicians were on-site. Within the first week, we booked 4 jobs that would have gone to voicemail. It paid for itself immediately."</p>
-      <div class="testi-author">
-        <div class="testi-av">DM</div>
-        <div><div class="testi-name">Dave M.</div><div class="testi-biz">HVAC & Cooling Co.</div></div>
+  <!-- BRAND LOGO SCROLL MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-title">Trusted by top service providers &amp; integrators</div>
+    <div class="marquee-container">
+      <div class="marquee-track">
+        <!-- Reusable greyed vector logos -->
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/68cd489e5cc5b3b63d17259a_vercel-logo1.svg" alt="Vercel Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/69b278e72764b15a5312517c_notion-lumon.svg" alt="Notion Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/690a5985b1c1332c33a609a8_clay-lumen2.svg" alt="Clay Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/689f1210efd813db213a4714_mercury-lumon.svg" alt="Mercury Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/68d282cf6db9e65365e93c86_replit-lumen-v2.svg" alt="Replit Logo">
+        <!-- Duplicate set for infinite scroll scroll continuity -->
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/68cd489e5cc5b3b63d17259a_vercel-logo1.svg" alt="Vercel Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/69b278e72764b15a5312517c_notion-lumon.svg" alt="Notion Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/690a5985b1c1332c33a609a8_clay-lumen2.svg" alt="Clay Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/689f1210efd813db213a4714_mercury-lumon.svg" alt="Mercury Logo">
+        <img class="marquee-item" src="https://cdn.prod.website-files.com/682fa12727f78b943ed45584/68d282cf6db9e65365e93c86_replit-lumen-v2.svg" alt="Replit Logo">
       </div>
     </div>
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"My front desk staff spent half their day answering the same questions. Now the AI handles all of that and they focus on patients who walk in. Absolute game changer."</p>
-      <div class="testi-author">
-        <div class="testi-av">KP</div>
-        <div><div class="testi-name">Dr. Karen P.</div><div class="testi-biz">Family Dental Practice</div></div>
-      </div>
-    </div>
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"Saturday afternoons used to be dead — phones ring but no one's at the desk. Now those calls convert. We're booked out two full weeks ahead thanks to NeverMiss."</p>
-      <div class="testi-author">
-        <div class="testi-av">JL</div>
-        <div><div class="testi-name">Jasmine L.</div><div class="testi-biz">Luxe Hair Studio</div></div>
-      </div>
-    </div>
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"I run two locations and can't be everywhere. NeverMiss routes calls correctly every time, books jobs overnight, and I wake up to a full schedule. Worth every penny."</p>
-      <div class="testi-author">
-        <div class="testi-av">TR</div>
-        <div><div class="testi-name">Tony R.</div><div class="testi-biz">Reliable Plumbing — 2 locations</div></div>
-      </div>
-    </div>
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"We had a flood of calls after a local coupon deal. NeverMiss handled every single one while we were slammed in the gym. We signed up 31 new members that week."</p>
-      <div class="testi-author">
-        <div class="testi-av">AC</div>
-        <div><div class="testi-name">Alicia C.</div><div class="testi-biz">Peak Performance Gym</div></div>
-      </div>
-    </div>
-
-    <div class="testi-card">
-      <div class="stars">★★★★★</div>
-      <p class="testi-q">"After hours used to mean lost work. Now tenants call any time, the AI collects the issue details and flags urgent ones to me. My response time looks incredible to owners."</p>
-      <div class="testi-author">
-        <div class="testi-av">MW</div>
-        <div><div class="testi-name">Marcus W.</div><div class="testi-biz">Summit Property Management</div></div>
-      </div>
-    </div>
-
   </div>
-</section>
 
-<div class="divider"></div>
-
-<!-- PROCESS -->
-<section>
-  <p class="eyebrow">Getting started</p>
-  <h2>From signup to <em>live in 8 days.</em></h2>
-  <p class="intro" style="margin-bottom:3.5rem">No technical skills needed. We handle the entire setup. You just review and approve.</p>
-  <div class="proc-row">
-    <div class="proc-step"><div class="proc-dot">📋</div><div class="proc-wk">Day 1</div><div class="proc-t">Intake call</div><p class="proc-d">30-min call to learn your business, services, FAQs, and booking flow.</p></div>
-    <div class="proc-step"><div class="proc-dot">🔨</div><div class="proc-wk">Days 2–5</div><div class="proc-t">Agent build</div><p class="proc-d">We build and test your agent with 20+ call simulations before it touches real customers.</p></div>
-    <div class="proc-step"><div class="proc-dot">✅</div><div class="proc-wk">Days 6–7</div><div class="proc-t">You approve</div><p class="proc-d">You listen to sample calls and request tweaks. We don't go live until you're happy.</p></div>
-    <div class="proc-step"><div class="proc-dot">🚀</div><div class="proc-wk">Day 8</div><div class="proc-t">Go live</div><p class="proc-d">Your agent starts answering calls. You get your first call summary that same evening.</p></div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- FAQ -->
-<section id="faq">
-  <p class="eyebrow">Common questions</p>
-  <h2>Good questions.<br><em>Honest answers.</em></h2>
-  <div style="max-width:700px;margin-top:2rem">
-    <div class="faq-list">
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does it sound like a robot?<span class="faq-tog">+</span></button><div class="faq-a">No. We use conversational AI voices that are warm, natural, and human-sounding. Most callers don't realize they're talking to an AI unless the agent discloses it — which we configure based on your preference.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What if a caller asks something the agent doesn't know?<span class="faq-tog">+</span></button><div class="faq-a">The agent gracefully handles gaps — it can offer to take a message, transfer the call, or let the caller know someone will follow up. We also update the knowledge base over time as new questions come in.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need to change my existing phone number?<span class="faq-tog">+</span></button><div class="faq-a">No. We can forward your existing number to the AI agent or set up a new dedicated number. Call forwarding takes about 5 minutes to configure.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What booking systems does it work with?<span class="faq-tog">+</span></button><div class="faq-a">We integrate with Google Calendar, Calendly, Square, Acuity, and more. If you use a different system, we'll review it — most scheduling tools have APIs or workarounds we can connect to.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel or change plans?<span class="faq-tog">+</span></button><div class="faq-a">Yes — month-to-month, no contracts. You can upgrade, downgrade, or cancel at any time. If you cancel, we keep your agent configuration for 60 days in case you want to restart.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is my business data private?<span class="faq-tog">+</span></button><div class="faq-a">Yes. Call recordings and customer data are stored securely and never sold or shared. We follow standard data handling practices and can sign an NDA if your industry requires it.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta-wrap" id="contact">
-  <div class="cta-grid"></div>
-  <div class="cta-glow"></div>
-  <div class="cta-body">
-    <h2>Stop losing customers<br>to <em>voicemail.</em></h2>
-    <p>Drop your email and we'll send a live demo built for your type of business.</p>
-    <div class="cta-row">
-      <input type="email" class="cta-in" placeholder="your@email.com">
-      <button class="cta-sub">Request a demo &rarr;</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="foot-inner">
-    <a class="foot-logo" href="#">
-      <div class="foot-lm">
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-          <path d="M10 2.5C10 2.5 4.5 5.5 4.5 10.5C4.5 15 10 17.5 10 17.5C10 17.5 15.5 15 15.5 10.5C15.5 5.5 10 2.5 10 2.5Z" fill="#fff"/>
-          <circle cx="10" cy="10.5" r="2.5" fill="#0ea855"/>
+  <!-- APP CONNECTOR GRID SECTION -->
+  <section class="connector-section">
+    <div class="connector-wrapper">
+      <div>
+        <p class="eyebrow">INTEGRATIONS</p>
+        <h2>Connects to the tools<br>you <em>already use.</em></h2>
+        <p class="intro">Rapid Voice syncs call results directly into your scheduling software, CRM, and communication platforms automatically.</p>
+      </div>
+      
+      <!-- Interactive Grid Visual — 5-spoke radial layout -->
+      <div class="connector-visual">
+        <div class="connector-center">
+          <img src="logo.png" alt="Rapid Voice Logo">
+        </div>
+        
+        <svg class="connector-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <line class="active-path" x1="200" y1="200" x2="200" y2="89"/>
+          <line class="active-path" x1="200" y1="200" x2="319" y2="165"/>
+          <line class="active-path" x1="200" y1="200" x2="268" y2="299"/>
+          <line class="active-path" x1="200" y1="200" x2="132" y2="299"/>
+          <line class="active-path" x1="200" y1="200" x2="81" y2="165"/>
         </svg>
+        
+        <div class="app-node node-gcal" title="Google Calendar">
+          <img src="https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6985066f0e48d2f8dd8cc148_ni-browser.svg" alt="Google Calendar">
+        </div>
+        <div class="app-node node-cal" title="Calendly">
+          <img src="https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6985066fecbc15fdf3640fac_ni-lock.svg" alt="Calendly">
+        </div>
+        <div class="app-node node-hub" title="HubSpot">
+          <img src="https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6985072be9b9ae75d0a3ce72_ni-chart-line.svg" alt="HubSpot">
+        </div>
+        <div class="app-node node-ghl" title="GoHighLevel">
+          <img src="https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6871316099ef4cdaa2d5a491_ni-users.svg" alt="GoHighLevel">
+        </div>
+        <div class="app-node node-slack" title="Slack">
+          <img src="https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/6985072be9b9ae75d0a3ce72_ni-chart-line.svg" alt="Slack">
+        </div>
       </div>
-      <span class="foot-wm">Never<span>Miss</span></span>
-    </a>
-    <ul class="foot-links">
-      <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <p class="foot-copy">© 2026 NeverMiss. All rights reserved.</p>
-  </div>
-</footer>
+    </div>
+  </section>
 
-<script src="js/form_handler.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/tracking.js"></script>
+  <!-- INTERACTIVE COMPARISON SLIDER SECTION -->
+  <section class="slider-section">
+    <div class="slider-wrapper">
+      <div class="slider-intro">
+        <p class="eyebrow">SPEED &amp; EFFICIENCY</p>
+        <h2>Drag to compare the<br><em>response delay.</em></h2>
+        <p class="intro" style="margin-left: auto; margin-right: auto;">Slide the handle back and forth to see the time difference between traditional callbacks and automated AI pickup.</p>
+      </div>
+      
+      <!-- Interactive comparison slider widget container -->
+      <div class="comparison-widget" id="comparison-slider-widget">
+        
+        <!-- Left Side: Traditional Callback (Gray/Red theme) -->
+        <div class="comparison-panel comparison-left">
+          <div class="panel-content-fixed">
+            <div>
+              <span class="comparison-tag">Traditional Callback</span>
+              <h3 class="comparison-title">Customer leaves voicemail</h3>
+              <p class="comparison-desc">Caller hangs up, searches online, and schedules with a competitor before you get the chance to check your mailbox.</p>
+            </div>
+            <div class="comparison-metric">
+              <span class="metric-num">15+</span>
+              <span class="metric-lbl">Minutes Delay</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Side: Rapid Voice AI (Electric Blue/White theme, clips dynamically) -->
+        <div class="comparison-panel comparison-right" id="slider-right-panel">
+          <div class="panel-content-fixed">
+            <div>
+              <span class="comparison-tag">Rapid Voice</span>
+              <h3 class="comparison-title">Instant call scheduling</h3>
+              <p class="comparison-desc">Rapid Voice picks up on the first ring, books the appointment directly in your calendar, and texts the caller instant confirmation.</p>
+            </div>
+            <div class="comparison-metric">
+              <span class="metric-num">2</span>
+              <span class="metric-lbl">Seconds Pickup</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Slider Draggable Handles -->
+        <div class="slider-divider" id="slider-divider-line">
+          <div class="slider-handle">&harr;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div><span class="stat-n">62%</span><span class="stat-l">of callers won't leave voicemail</span></div>
+      <div><span class="stat-n">24/7</span><span class="stat-l">Coverage, weekends included</span></div>
+      <div><span class="stat-n">&lt;2s</span><span class="stat-l">Average answer time</span></div>
+      <div><span class="stat-n">3×</span><span class="stat-l">More bookings vs voicemail</span></div>
+    </div>
+  </div>
+
+  <!-- VIDEO SHOWCASE SECTION -->
+  <section class="video-section">
+    <div class="video-grid">
+      <!-- Left side instructions -->
+      <div>
+        <p class="eyebrow" style="color: #60A5FA;">SEE IT IN ACTION</p>
+        <h2 style="color: #fff; margin-bottom: 1.5rem;">Experience the future of<br><em>business calls.</em></h2>
+        <p class="intro" style="color: rgba(255, 255, 255, 0.65); margin-bottom: 2rem; max-width: 100%;">Watch our 2-minute product walkthrough to see how Rapid Voice intercepts missed calls, books appointments directly in your calendar, and logs leads to your database in real-time.</p>
+      </div>
+      
+      <!-- Right side video card displaying visual thumbnail preview -->
+      <div class="video-showcase-box" id="play-video-trigger">
+        <img class="video-preview-img" src="video_thumbnail.png" alt="Rapid Voice Demo Video Preview">
+        <div class="play-btn-overlay">
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"></path>
+          </svg>
+        </div>
+        <div class="video-showcase-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM SECTION -->
+  <section>
+    <p class="eyebrow">The problem</p>
+    <h2>Every missed call is a<br><em>missed customer.</em></h2>
+    <p class="intro">Small businesses lose revenue daily not because of bad service — but because no one picked up the phone.</p>
+    <div class="prob-grid">
+      <div class="prob-card">
+        <span class="prob-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.42 19.42 0 0 1 4.43 9.68a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.34 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.32 8.91"/><line x1="23" x2="1" y1="1" y2="23"/></svg>
+        </span>
+        <h3>Calls during busy hours</h3>
+        <p>You're with a customer, under a car, or finishing a job. Your phone rings — and rings. Nobody answers.</p>
+        <p class="prob-loss">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          That caller booked your competitor.
+        </p>
+      </div>
+      <div class="prob-card">
+        <span class="prob-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </span>
+        <h3>After-hours inquiries</h3>
+        <p>45% of service calls happen outside 9–5. Without 24/7 coverage, you wake up to voicemails you can't act on fast enough.</p>
+        <p class="prob-loss">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          They moved on overnight.
+        </p>
+      </div>
+      <div class="prob-card">
+        <span class="prob-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </span>
+        <h3>Repetitive questions</h3>
+        <p>Hours per week spent answering the same questions — "What are your hours?", "Do you take insurance?", "How much is a haircut?"</p>
+        <p class="prob-loss">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          That's billable time lost to the phone.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- HOW IT WORKS SECTION -->
+  <section id="how-it-works">
+    <p class="eyebrow">How it works</p>
+    <h2>Set up once.<br><em>Always on.</em></h2>
+    <div class="steps-wrap">
+      <div class="steps-list">
+        <div class="step">
+          <div class="step-n">1</div>
+          <div>
+            <div class="step-t">We learn your business</div>
+            <p class="step-d">30 minutes learning your services, hours, FAQs, and booking flow. No technical knowledge needed on your end.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <div>
+            <div class="step-t">Your agent goes live</div>
+            <p class="step-d">We forward your number or assign a new one. Your AI agent answers in your business's voice — human-sounding, never robotic.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <div>
+            <div class="step-t">Calls are handled automatically</div>
+            <p class="step-d">Your agent books appointments, answers questions, captures leads, and routes urgent calls directly to you via transfer.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">4</div>
+          <div>
+            <div class="step-t">You get a daily summary</div>
+            <p class="step-d">Every morning, a clean summary — who called, what they needed, what was booked, and what needs your attention.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Today's Call Summary Mockup Dashboard -->
+      <div class="sum-card">
+        <div class="sum-head">Today's call summary</div>
+        <div class="sum-row">
+          <div class="sum-time">8:14 AM</div>
+          <div>
+            <div class="sum-msg">Marco R. — AC tune-up, booked for Thursday 10 AM</div>
+            <span class="stag t-book">Booked</span>
+          </div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-time">9:02 AM</div>
+          <div>
+            <div class="sum-msg">Unknown — asked about pricing, left contact number</div>
+            <span class="stag t-lead">Lead captured</span>
+          </div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-time">11:47 AM</div>
+          <div>
+            <div class="sum-msg">Sandra K. — emergency furnace issue, transferred to you</div>
+            <span class="stag t-xfer">Transferred</span>
+          </div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-time">2:31 PM</div>
+          <div>
+            <div class="sum-msg">Chris T. — HVAC inspection, booked for Friday 3 PM</div>
+            <span class="stag t-book">Booked</span>
+          </div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-time">6:18 PM</div>
+          <div>
+            <div class="sum-msg">First-time caller — asked about payment plans, left email</div>
+            <span class="stag t-lead">Lead captured</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- NICHES SECTION -->
+  <section id="who-it-helps">
+    <p class="eyebrow">Who it helps</p>
+    <h2>Built for <em>local service businesses.</em></h2>
+    <p class="intro">Any business where a missed call = a missed customer. If your phone matters, your phone agent matters.</p>
+    <div class="niches">
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><div class="niche-n">HVAC &amp; Plumbing</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div class="niche-n">Dental Clinics</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.47" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg></span><div class="niche-n">Salons &amp; Spas</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span><div class="niche-n">Restaurants</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="niche-n">Auto Repair</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><div class="niche-n">Property Managers</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11"/><path d="M6.5 17.5h11"/><path d="M3 8.5h3v7H3z"/><path d="M18 8.5h3v7h-3z"/><path d="M6.5 6.5v11"/><path d="M17.5 6.5v11"/></svg></span><div class="niche-n">Gyms &amp; Studios</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></span><div class="niche-n">Cleaning Services</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></span><div class="niche-n">Clinics &amp; Med Spas</div></div>
+      <div class="niche"><span class="niche-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><div class="niche-n">Electricians</div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PRICING SECTION -->
+  <section id="pricing">
+    <p class="eyebrow">Pricing</p>
+    <h2>Simple pricing.<br><em>No surprises.</em></h2>
+    <p class="intro">One-time setup fee. Monthly subscription. Cancel anytime. Most clients recoup the cost from their first week of saved calls.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="price-tier">Starter</div>
+        <div class="price-setup">+ $299 setup</div>
+        <div class="price-mo"><span class="price-amt">$149</span><span class="price-per">/mo</span></div>
+        <p class="price-desc">For solo operators and small shops who need to stop missing calls.</p>
+        <ul class="price-feats">
+          <li>24/7 call answering</li>
+          <li>FAQ handling (hours, services, pricing)</li>
+          <li>Missed call handling</li>
+          <li>Daily text + email call summary</li>
+          <li>Up to 200 calls/month</li>
+          <li>Setup in 3–5 days</li>
+        </ul>
+        <a class="price-btn" href="#contact">Get started</a>
+      </div>
+      
+      <div class="price-card feat">
+        <div class="price-badge">Most popular</div>
+        <div class="price-tier">Growth</div>
+        <div class="price-setup">+ $499 setup</div>
+        <div class="price-mo"><span class="price-amt">$299</span><span class="price-per">/mo</span></div>
+        <p class="price-desc">For businesses ready to automate bookings and grow their pipeline.</p>
+        <ul class="price-feats">
+          <li>Everything in Starter</li>
+          <li>Appointment booking (Google Cal, Calendly)</li>
+          <li>Lead capture with follow-up</li>
+          <li>Live call transfer to you</li>
+          <li>Up to 500 calls/month</li>
+          <li>Monthly performance report</li>
+        </ul>
+        <a class="price-btn" href="#contact">Get started</a>
+      </div>
+      
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-setup">+ $999 setup</div>
+        <div class="price-mo"><span class="price-amt">$499</span><span class="price-per">/mo</span></div>
+        <p class="price-desc">For multi-location or high-volume businesses needing full integration.</p>
+        <ul class="price-feats">
+          <li>Everything in Growth</li>
+          <li>CRM integration (HubSpot, GoHighLevel)</li>
+          <li>Multi-location routing</li>
+          <li>Custom analytics dashboard</li>
+          <li>Unlimited calls</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="price-btn" href="#contact">Get started</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section>
+    <p class="eyebrow">From the field</p>
+    <h2>What business owners are <em>saying.</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"We were losing 8–10 calls a day while technicians were on-site. Within the first week, we booked 4 jobs that would have gone to voicemail. It paid for itself immediately."</p>
+        <div class="testi-author">
+          <div class="testi-av">DM</div>
+          <div><div class="testi-name">Dave M.</div><div class="testi-biz">HVAC &amp; Cooling Co.</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"My front desk staff spent half their day answering the same questions. Now the AI handles all of that and they focus on patients who walk in. Absolute game changer."</p>
+        <div class="testi-author">
+          <div class="testi-av">KP</div>
+          <div><div class="testi-name">Dr. Karen P.</div><div class="testi-biz">Family Dental Practice</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"Saturday afternoons used to be dead — phones ring but no one's at the desk. Now those calls convert. We're booked out two full weeks ahead thanks to Rapid Voice."</p>
+        <div class="testi-author">
+          <div class="testi-av">JL</div>
+          <div><div class="testi-name">Jasmine L.</div><div class="testi-biz">Luxe Hair Studio</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"I run two locations and can't be everywhere. Rapid Voice routes calls correctly every time, books jobs overnight, and I wake up to a full schedule. Worth every penny."</p>
+        <div class="testi-author">
+          <div class="testi-av">TR</div>
+          <div><div class="testi-name">Tony R.</div><div class="testi-biz">Reliable Plumbing — 2 locations</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"We had a flood of calls after a local coupon deal. Rapid Voice handled every single one while we were slammed in the gym. We signed up 31 new members that week."</p>
+        <div class="testi-author">
+          <div class="testi-av">AC</div>
+          <div><div class="testi-name">Alicia C.</div><div class="testi-biz">Peak Performance Gym</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-q">"After hours used to mean lost work. Now tenants call any time, the AI collects the issue details and flags urgent ones to me. My response time looks incredible to owners."</p>
+        <div class="testi-author">
+          <div class="testi-av">MW</div>
+          <div><div class="testi-name">Marcus W.</div><div class="testi-biz">Summit Property Management</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- GETTING STARTED PROCESS SECTION -->
+  <section>
+    <p class="eyebrow">Getting started</p>
+    <h2>From signup to <em>live in 8 days.</em></h2>
+    <p class="intro" style="margin-bottom: 3.5rem;">No technical skills needed. We handle the entire setup. You just review and approve.</p>
+    <div class="proc-row">
+      <div class="proc-step">
+        <div class="proc-dot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14h6"/><path d="M9 18h6"/><path d="M9 10h6"/></svg>
+        </div>
+        <div class="proc-wk">Day 1</div>
+        <div class="proc-t">Intake call</div>
+        <p class="proc-d">30-min call to learn your business, services, FAQs, and booking flow.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="proc-wk">Days 2–5</div>
+        <div class="proc-t">Agent build</div>
+        <p class="proc-d">We build and test your agent with 20+ call simulations before it touches real customers.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="proc-wk">Days 6–7</div>
+        <div class="proc-t">You approve</div>
+        <p class="proc-d">You listen to sample calls and request tweaks. We don't go live until you're happy.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 3.4-2 3.4s2.14-.5 3.4-2c1.26-1.5 3.4-2 3.4-2s-2.14.5-3.4 2z"/><path d="M12 15c-3-3-3-9 3-12 6 3 6 9 3 12z"/><path d="M9.5 14.5 16 8"/><path d="m19 5-3 3"/><path d="m14 10-3 3"/></svg>
+        </div>
+        <div class="proc-wk">Day 8</div>
+        <div class="proc-t">Go live</div>
+        <p class="proc-d">Your agent starts answering calls. You get your first call summary that same evening.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FAQ SECTION -->
+  <section id="faq">
+    <p class="eyebrow">Common questions</p>
+    <h2>Good questions.<br><em>Honest answers.</em></h2>
+    <div class="faq-list-wrap">
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Does it sound like a robot?<span class="faq-tog">+</span></button>
+          <div class="faq-a">No. We use conversational AI voices that are warm, natural, and human-sounding. Most callers don't realize they're talking to an AI unless the agent discloses it — which we configure based on your preference.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What if a caller asks something the agent doesn't know?<span class="faq-tog">+</span></button>
+          <div class="faq-a">The agent gracefully handles gaps — it can offer to take a message, transfer the call, or let the caller know someone will follow up. We also update the knowledge base over time as new questions come in.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need to change my existing phone number?<span class="faq-tog">+</span></button>
+          <div class="faq-a">No. We can forward your existing number to the AI agent or set up a new dedicated number. Call forwarding takes about 5 minutes to configure.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What booking systems does it work with?<span class="faq-tog">+</span></button>
+          <div class="faq-a">We integrate with Google Calendar, Calendly, Square, Acuity, and more. If you use a different system, we'll review it — most scheduling tools have APIs or workarounds we can connect to.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can I cancel or change plans?<span class="faq-tog">+</span></button>
+          <div class="faq-a">Yes — month-to-month, no contracts. You can upgrade, downgrade, or cancel at any time. If you cancel, we keep your agent configuration for 60 days in case you want to restart.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Is my business data private?<span class="faq-tog">+</span></button>
+          <div class="faq-a">Yes. Call recordings and customer data are stored securely and never sold or shared. We follow standard data handling practices and can sign an NDA if your industry requires it.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA DEMO FORM -->
+  <div class="cta-wrap" id="contact">
+    <div class="cta-grid"></div>
+    <div class="cta-glow"></div>
+    <div class="cta-body">
+      <h2>Stop losing customers<br>to <em>voicemail.</em></h2>
+      <p>Fill in your details below and we'll reach out with a live demo built for your business.</p>
+      
+      <form class="cta-form" id="demo-request-form" novalidate>
+        <div class="cta-form-row">
+          <div class="cta-field">
+            <label class="cta-label" for="inp-name">Full Name *</label>
+            <input class="cta-in" id="inp-name" name="name" type="text" placeholder="John Smith" required autocomplete="name">
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="inp-email">Email Address *</label>
+            <input class="cta-in" id="inp-email" name="email" type="email" placeholder="john@company.com" required autocomplete="email">
+          </div>
+        </div>
+        <div class="cta-form-row">
+          <div class="cta-field">
+            <label class="cta-label" for="inp-phone">Phone Number *</label>
+            <input class="cta-in" id="inp-phone" name="phone" type="tel" placeholder="+1 (555) 000-0000" required autocomplete="tel">
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="inp-company">Company Name</label>
+            <input class="cta-in" id="inp-company" name="company" type="text" placeholder="ACME Services" autocomplete="organization">
+          </div>
+        </div>
+        <div class="cta-field">
+          <label class="cta-label" for="inp-industry">Industry *</label>
+          <select class="cta-in cta-select" id="inp-industry" name="industry" required>
+            <option value="" disabled selected>Select your industry...</option>
+            <option value="Healthcare &amp; Medical Clinics">Healthcare &amp; Medical Clinics</option>
+            <option value="Dental Practices">Dental Practices</option>
+            <option value="HVAC &amp; Plumbing">HVAC &amp; Plumbing</option>
+            <option value="Auto Repair &amp; Dealerships">Auto Repair &amp; Dealerships</option>
+            <option value="Salons &amp; Spas">Salons &amp; Spas</option>
+            <option value="Restaurants &amp; Food Service">Restaurants &amp; Food Service</option>
+            <option value="Property Management">Property Management</option>
+            <option value="Gyms &amp; Fitness Studios">Gyms &amp; Fitness Studios</option>
+            <option value="Legal Services">Legal Services</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Cleaning Services">Cleaning Services</option>
+            <option value="Electricians &amp; Contractors">Electricians &amp; Contractors</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <button class="cta-sub" type="submit" id="demo-submit-btn">Request a Demo &rarr;</button>
+      </form>
+      <p class="cta-note" id="cta-status-msg"></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-inner">
+      <a class="foot-logo" href="#">
+        <!-- Link actual logo image -->
+        <img src="logo.png" alt="Rapid Voice Logo">
+      </a>
+      <ul class="foot-links">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="foot-copy">© 2026 Rapid Voice. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- VIDEO LIGHTBOX MODAL (Wispr Flow style) -->
+  <div class="video-lightbox" id="video-lightbox-modal">
+    <div class="video-lightbox-content">
+      <button class="video-lightbox-close" id="close-video-trigger">
+        &times; <span>Close</span>
+      </button>
+      <iframe class="video-lightbox-iframe" id="video-lightbox-iframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/form_handler.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/tracking.js"></script>
 </body>
 </html>

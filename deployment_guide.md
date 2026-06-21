@@ -1,4 +1,4 @@
-# Deployment Guide: NeverMiss AI Landing Page & Analytics
+# Deployment Guide: Rapid Voice Landing Page & Analytics
 
 This guide walks you through deploying your restructured project. Depending on your preference, you can choose the **Serverless Static Setup** (simplest, uses direct Supabase client logging) or the **Node.js Server Setup** (uses the Express API backend).
 
@@ -11,11 +11,11 @@ Since the frontend landing pages (`index.html` and `never_miss.html`) handle coo
 ### 1. Deploy on Vercel (Easiest)
 1. Sign up/log in to [Vercel](https://vercel.com).
 2. Click **Add New** > **Project**.
-3. Import your GitHub repository (`NeverMiss-AI`).
+3. Import your GitHub repository (`Rapid-Voice`).
 4. In the **Configure Project** settings:
    - **Framework Preset**: Select `Other` (or leave as auto-detected).
    - **Root Directory**: Select `frontend` (this ensures Vercel only serves your static files).
-5. Click **Deploy**. Vercel will host your landing pages on a fast CDN and provide a production HTTPS URL (e.g., `nevermiss-ai.vercel.app`).
+5. Click **Deploy**. Vercel will host your landing pages on a fast CDN and provide a production HTTPS URL (e.g., `rapid-voice.vercel.app`).
 
 ### 2. Deploy on GitHub Pages
 1. Go to your repository on GitHub.
@@ -42,7 +42,7 @@ If you prefer to route tracking requests through your Express backend server (`/
 5. Under **Environment Variables**, add:
    - `DATABASE_URL`: `postgresql://postgres.thriovyovxxdcgzvdxem:OwMel37YeiJgfzIB@aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres`
    - `PORT`: `10000` (Render allocates ports dynamically, Express will use the custom port).
-6. Click **Deploy Web Service**. Render will output a live URL (e.g., `nevermiss-backend.onrender.com`).
+6. Click **Deploy Web Service**. Render will output a live URL (e.g., `rapid-voice-backend.onrender.com`).
 
 ### Step 2: Update Frontend Tracking Code
 Since you are now routing database inserts through the backend, update `frontend/js/tracking.js` to send HTTP requests to your backend server instead of direct Supabase inserts:

@@ -1,9 +1,9 @@
 Hello,
 
-You have received a new demo request from the NeverMiss landing page!
+You have received a new demo request from the Rapid Voice landing page!
 
 User's Email: {email}
 Requested on: {date}
 
 Best regards,
-NeverMiss Website Bot
+Rapid Voice AI
