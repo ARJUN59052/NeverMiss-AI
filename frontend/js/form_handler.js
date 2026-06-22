@@ -4,6 +4,7 @@ function toggleFaq(btn) {
 
 document.addEventListener('DOMContentLoaded', () => {
   // ── FULL LEAD CAPTURE FORM HANDLER ──
+  let selectedPlan = '';
   const demoForm    = document.getElementById('demo-request-form');
   const submitBtn   = document.getElementById('demo-submit-btn');
   const statusMsg   = document.getElementById('cta-status-msg');
@@ -42,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'Phone': phone,
             'Company': company || 'N/A',
             'Industry': industry,
-            _subject: `⚡ New Demo Lead: ${name} (${industry})`,
+            'Selected Plan': selectedPlan ? (selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)) : 'None Selected',
+            _subject: `⚡ New Demo Lead [Plan: ${selectedPlan ? selectedPlan.toUpperCase() : 'NONE'}]: ${name} (${industry})`,
             _template: 'box'
           })
         });
@@ -102,22 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const playVideoTrigger = document.getElementById('play-video-trigger');
   const closeVideoTrigger = document.getElementById('close-video-trigger');
   const videoLightbox = document.getElementById('video-lightbox-modal');
-  const videoIframe = document.getElementById('video-lightbox-iframe');
+  const videoPlayer = document.getElementById('video-lightbox-player');
   
-  const defaultVideoEmbedUrl = 'https://www.youtube.com/embed/0LT64_mgkro?si=qxBR1n7Q6JRIYzvG&autoplay=1&rel=0&modestbranding=1';
+  const defaultVideoUrl = 'voice_ai_video.mp4';
 
-  if (playVideoTrigger && videoLightbox && videoIframe) {
+  if (playVideoTrigger && videoLightbox && videoPlayer) {
     playVideoTrigger.addEventListener('click', () => {
-      videoIframe.src = defaultVideoEmbedUrl;
+      if (!videoPlayer.src || videoPlayer.src === '' || videoPlayer.src.endsWith('/undefined')) {
+        videoPlayer.src = defaultVideoUrl;
+      }
       videoLightbox.classList.add('active');
+      videoPlayer.play().catch(err => console.log('Auto-play blocked or failed:', err));
       document.body.style.overflow = 'hidden'; // Stop page scroll
     });
   }
 
   const closeLightbox = () => {
-    if (videoLightbox && videoIframe) {
+    if (videoLightbox && videoPlayer) {
       videoLightbox.classList.remove('active');
-      videoIframe.src = ''; // Stop video
+      videoPlayer.pause();
+      videoPlayer.currentTime = 0; // Reset video to start
       document.body.style.overflow = ''; // Re-enable scroll
     }
   };
@@ -242,5 +248,68 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }, 8000);
   }
+
+  // ── INTEGRATIONS HOVER HIGHLIGHTS ──
+  const appNodes = document.querySelectorAll('.app-node');
+  appNodes.forEach(node => {
+    const nodeClass = Array.from(node.classList).find(c => c.startsWith('node-'));
+    if (nodeClass) {
+      const key = nodeClass.replace('node-', '');
+      const matchingLine = document.querySelector(`.line-${key}`);
+      if (matchingLine) {
+        node.addEventListener('mouseenter', () => {
+          matchingLine.classList.add('highlight');
+        });
+        node.addEventListener('mouseleave', () => {
+          matchingLine.classList.remove('highlight');
+        });
+      }
+    }
+  });
+
+  // ── PRICING PLAN QUERY PARAMETER HANDLER ──
+  function getHashParams() {
+    const hash = window.location.hash;
+    const qIndex = hash.indexOf('?');
+    if (qIndex === -1) return {};
+    const search = hash.substring(qIndex + 1);
+    const params = {};
+    search.split('&').forEach(pair => {
+      const [key, val] = pair.split('=');
+      if (key) params[decodeURIComponent(key)] = decodeURIComponent(val || '');
+    });
+    return params;
+  }
+
+  function handleHashPlan() {
+    const params = getHashParams();
+    const plan = (params.plan || '').toLowerCase();
+    if (plan && ['launchpad', 'ascend', 'enterprise'].includes(plan)) {
+      selectedPlan = plan;
+      
+      const planDisplay = plan.charAt(0).toUpperCase() + plan.slice(1);
+      let badge = document.getElementById('selected-plan-badge');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'selected-plan-badge';
+        badge.className = 'selected-plan-badge';
+        const form = document.getElementById('demo-request-form');
+        if (form) {
+          form.parentNode.insertBefore(badge, form);
+        }
+      }
+      
+      badge.innerHTML = `You have selected the <strong>${planDisplay}</strong> plan. Fill in your details below to get started.`;
+      badge.style.display = 'block';
+      
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
+  window.addEventListener('hashchange', handleHashPlan);
+  handleHashPlan();
 });
 
